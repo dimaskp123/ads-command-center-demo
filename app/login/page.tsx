@@ -1,5 +1,5 @@
 import { LayoutGrid, Lock } from "lucide-react";
-import { authConfigured } from "@/lib/auth";
+import { authConfigured, authProblems } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Sign in · Client Ads Command Center" };
@@ -8,6 +8,7 @@ export const metadata = { title: "Sign in · Client Ads Command Center" };
 // JavaScript (which carries the client data) is not served.
 export default function LoginPage({ searchParams }: { searchParams: { error?: string; next?: string } }) {
   const configured = authConfigured();
+  const problems = authProblems();
   const error = searchParams.error;
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f6f6f4] px-4">
@@ -27,7 +28,7 @@ export default function LoginPage({ searchParams }: { searchParams: { error?: st
           </h1>
           {!configured || error === "setup" ? (
             <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Sign-in isn&apos;t set up yet. Add <code>AUTH_SECRET</code> and <code>DASHBOARD_USERS</code> in the deployment&apos;s environment variables, then redeploy.
+              Sign-in isn&apos;t set up yet. {problems.join(" ")} Set it in the deployment&apos;s environment variables (Production), then redeploy.
             </p>
           ) : error === "invalid" ? (
             <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-800">Wrong username or password.</p>

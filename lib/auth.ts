@@ -61,6 +61,17 @@ export function configuredUsers(): Map<string, string> {
   return out;
 }
 
+/** What is wrong with the sign-in setup, without revealing any value (shown on the login page). */
+export function authProblems(): string[] {
+  const out: string[] = [];
+  const secret = clean(process.env.AUTH_SECRET);
+  if (!secret) out.push("AUTH_SECRET is missing in this deployment.");
+  else if (secret.length < 32) out.push(`AUTH_SECRET is too short (${secret.length} characters; needs 32 or more).`);
+  if (!clean(process.env.DASHBOARD_USERS)) out.push("DASHBOARD_USERS is missing in this deployment.");
+  else if (configuredUsers().size === 0) out.push("DASHBOARD_USERS has no valid username:password pair (for example demo:your-password).");
+  return out;
+}
+
 export function authConfigured(): boolean {
   return authSecret() !== null && configuredUsers().size > 0;
 }
